@@ -12,10 +12,12 @@ services:
       - directory-mysql-data:/var/lib/mysql
       - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "directory", "-p${DB_PASSWORD:-directory}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
       interval: 5s
       timeout: 5s
       retries: 30
+      # First-boot init runs with networking disabled; don't count those failures.
+      start_period: 180s
 
   tomcat:
     build:
