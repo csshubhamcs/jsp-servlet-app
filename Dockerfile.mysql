@@ -1,0 +1,6 @@
+# Custom MySQL image with the schema baked in.
+# Avoids a host bind mount (unreliable on Coolify compose deployments).
+# Scripts in /docker-entrypoint-initdb.d run once, on first data-dir init,
+# against the database named by MYSQL_DATABASE.
+FROM mysql:8.4
+COPY db/schema.sql /docker-entrypoint-initdb.d/01-schema.sql

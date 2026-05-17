@@ -2,15 +2,18 @@
 # Set the compose path to this file in the Coolify resource settings.
 services:
   mysql:
-    image: mysql:8.4
+    # Custom image with db/schema.sql baked in (see Dockerfile.mysql).
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql
     environment:
       MYSQL_DATABASE: directory
       MYSQL_USER: directory
       MYSQL_PASSWORD: ${DB_PASSWORD:-directory}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpw}
     volumes:
-      - directory-mysql-data:/var/lib/mysql
-      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+      # Fresh volume name: the old one initialised without the schema.
+      - directory-db-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
       interval: 5s
@@ -35,4 +38,4 @@ services:
         condition: service_healthy
 
 volumes:
-  directory-mysql-data:
+  directory-db-data:
