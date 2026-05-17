@@ -1,0 +1,16 @@
+<%--
+  foot.jspf — shared page footer and closing tags.
+  Loads app.js (theme toggle, live-search, password toggle, etc.) and closes
+  the <body> and <html> elements opened in head.jspf.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<footer class="app-footer">
+  <div class="container d-flex flex-wrap justify-content-between gap-2">
+    <span><span class="brand-mark sm"><i class="bi bi-telephone-fill"></i></span>
+      Employee Telephone Directory</span>
+    <span class="text-muted-2">Role-based contact management</span>
+  </div>
+</footer>
+<script src="${pageContext.request.contextPath}/static/js/app.js"></script>
+</body>
+</html>

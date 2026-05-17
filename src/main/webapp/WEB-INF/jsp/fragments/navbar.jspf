@@ -1,0 +1,42 @@
+<%--
+  navbar.jspf — top navigation bar included on every authenticated page.
+  Uses the 'su' (sessionUser) variable to show role-sensitive nav links:
+    - All users see "My Profile".
+    - Admin and Super Admin also see "Directory" and "Edit Requests".
+    - Super Admin also sees "Manage Users".
+--%>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<c:set var="su" value="${sessionScope.sessionUser}"/>
+<nav class="navbar navbar-expand-lg app-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="${ctx}/">
+      <span class="brand-mark"><i class="bi bi-telephone-fill"></i></span> Directory
+    </a>
+    <button class="navbar-toggler" type="button" id="nav-toggler" aria-label="Menu">
+      <i class="bi bi-list"></i>
+    </button>
+    <div class="navbar-collapse" id="app-nav-collapse">
+      <div class="navbar-nav me-auto">
+        <a class="nav-link" href="${ctx}/profile"><i class="bi bi-person"></i> My Profile</a>
+        <c:if test="${su.role == 'ADMIN' or su.role == 'SUPER_ADMIN'}">
+          <a class="nav-link" href="${ctx}/directory"><i class="bi bi-grid-3x3-gap"></i> Directory</a>
+          <a class="nav-link" href="${ctx}/requests"><i class="bi bi-inbox"></i> Edit Requests</a>
+        </c:if>
+        <c:if test="${su.role == 'SUPER_ADMIN'}">
+          <a class="nav-link" href="${ctx}/admin/users"><i class="bi bi-people"></i> Manage Users</a>
+        </c:if>
+      </div>
+      <div class="navbar-nav navbar-actions">
+        <a class="nav-link" href="${ctx}/change-password"><i class="bi bi-shield-lock"></i> Change Password</a>
+        <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Toggle theme">
+          <i class="bi bi-moon-stars" data-theme-icon></i>
+        </button>
+        <form action="${ctx}/logout" method="post" class="d-inline">
+          <button class="btn btn-secondary btn-sm" type="submit"><i class="bi bi-box-arrow-right"></i> Logout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>

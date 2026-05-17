@@ -1,0 +1,37 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: directory-mysql
+    environment:
+      MYSQL_DATABASE: directory
+      MYSQL_USER: directory
+      MYSQL_PASSWORD: directory
+      MYSQL_ROOT_PASSWORD: rootpw
+    ports:
+      - "3307:3306"
+    volumes:
+      - directory-mysql-data:/var/lib/mysql
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "directory", "-pdirectory"]
+      interval: 4s
+      timeout: 4s
+      retries: 30
+
+  tomcat:
+    image: tomcat:10.1-jdk21-temurin
+    container_name: directory-tomcat
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_URL: "jdbc:mysql://mysql:3306/directory"
+      DB_USER: directory
+      DB_PASSWORD: directory
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./target/jsp-servlet-app.war:/usr/local/tomcat/webapps/ROOT.war:ro
+
+volumes:
+  directory-mysql-data:
